@@ -1,0 +1,88 @@
+{% extends 'base.html' %}
+
+{% block title %}Signup Page{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center mt-5">
+    <form method="post" action="{% url 'signup' %}" class="bg-white" style="min-width: 300px;">
+        {% csrf_token %}
+        <h4 class="mb-4 text-center">Signup</h4>
+
+        <div class="mb-3">
+            <input
+                type="text"
+                name="name"
+                class="form-control"
+                id="name"
+                placeholder="Enter name"
+                required
+                value="{{ request.POST.name|default:'' }}"
+            >
+            {% if errors.name %}
+                <p style="color: red; font-size: 13px;">{{ errors.name }}</p>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <input
+                type="text"
+                name="phone"
+                class="form-control"
+                id="phone"
+                placeholder="Enter phone"
+                required
+                value="{{ request.POST.phone|default:'' }}"
+            >
+            {% if errors.phone %}
+                <p style="color: red; font-size: 13px;">{{ errors.phone }}</p>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <input
+                type="email"
+                name="email"
+                class="form-control"
+                id="email"
+                placeholder="Enter email"
+                required
+                value="{{ request.POST.email|default:'' }}"
+            >
+            {% if errors.email %}
+                <p style="color: red; font-size: 13px;">{{ errors.email }}</p>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <input
+                type="password"
+                name="password"
+                class="form-control"
+                id="password"
+                placeholder="Enter password"
+                required
+            >
+            {% if errors.password %}
+                <p style="color: red; font-size: 13px;">{{ errors.password }}</p>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <input
+                type="password"
+                name="c_password"
+                class="form-control"
+                id="c_password"
+                placeholder="Confirm password"
+                required
+            >
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Next</button>
+
+        <div class="d-flex justify-content-center align-items-center mt-4">
+            <p>I have account <a href="{% url 'login' %}">Login</a></p>
+        </div>
+    </form>
+</div>
+{% endblock %}

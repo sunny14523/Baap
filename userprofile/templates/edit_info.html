@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  .edit-wrapper {
+    max-width: 750px;
+    margin: 0 auto;
+  }
+  .error-text {
+    color: red;
+    font-size: 0.875em;
+  }
+</style>
+
+<div class="container edit-wrapper mt-4">
+
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Edit Personal Information</h2>
+    <a href="{% url 'personal_info' %}" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left"></i> Back
+    </a>
+  </div>
+
+  <div class="bg-light p-4 rounded shadow-sm">
+    <form method="POST" novalidate>
+      {% csrf_token %}
+
+      <div class="mb-3">
+        <label for="name" class="form-label">Full Name</label>
+        <input
+          type="text"
+          class="form-control {% if errors.name %}is-invalid{% endif %}"
+          id="name"
+          name="name"
+          value="{{ name|default:'' }}"
+          required
+        >
+        {% if errors.name %}
+          <div class="error-text">{{ errors.name }}</div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input
+          type="email"
+          class="form-control {% if errors.email %}is-invalid{% endif %}"
+          id="email"
+          name="email"
+          value="{{ email|default:'' }}"
+          required
+        >
+        <small class="form-text text-muted">Changing your email will require verification via OTP.</small>
+        {% if errors.email %}
+          <div class="error-text">{{ errors.email }}</div>
+        {% endif %}
+      </div>
+
+      <div class="mb-3">
+        <label for="phone" class="form-label">Phone Number</label>
+        <input
+          type="text"
+          class="form-control {% if errors.phone %}is-invalid{% endif %}"
+          id="phone"
+          name="phone"
+          value="{{ phone|default:'' }}"
+          required
+          maxlength="10"
+          pattern="\d{10}"
+        >
+        {% if errors.phone %}
+          <div class="error-text">{{ errors.phone }}</div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-save"></i> Save Changes
+      </button>
+    </form>
+  </div>
+
+</div>
+
+{% endblock %}

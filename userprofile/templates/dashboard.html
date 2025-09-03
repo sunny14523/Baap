@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-start mt-3">
+
+  <div style="width: 100%; max-width: 720px;">
+
+    <!-- Search Form -->
+    <form method="GET" action="" class="mb-3">
+      <div class="d-flex justify-content-between align-items-center">
+        <input
+  class="form-control me-2"
+  type="search"
+  name="q"
+  id="product-search"
+  placeholder="Search"
+  aria-label="Search"
+  style="max-width: 330px; outline:none; box-shadow:none;"
+>
+
+
+        <button class="btn btn-outline-secondary" type="submit">🔍</button>
+      </div>
+    </form>
+
+    <!-- Category and Dropdown -->
+    <div class="d-flex gap-3 bg-light p-3 rounded mb-3" style="border: 2px solid white;">
+  <form method="GET" action="{% url 'dashboard' %}">
+    <select name="category" class="form-select" onchange="this.form.submit()">
+      <option value="none">All categories</option>
+      {% for category in category %}
+        <option value="{{ category.id }}">{{ category.category_name }}</option>
+      {% endfor %}
+    </select>
+  </form>
+        <a class="btn btn-light" href="/dashboard/">reset</a>
+</div>
+
+
+    <!-- Products Container -->
+    <div class="row g-3">
+
+      <style>
+        .product-card {
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+          border-radius: 10px;
+        }
+        .product-card:hover {
+          transform: scale(1.03);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+          z-index: 2;
+        }
+        .product-info {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          padding: 5px 10px;
+          font-weight: bold;
+        }
+        .product-description {
+          padding: 0 10px 10px;
+          font-size: 0.9rem;
+          color: #555;
+        }
+      </style>
+
+      {% for product in product %}
+      <div class="col-6 col-md-6">
+        <div class="product-card p-2 bg-light">
+
+          <!-- Image -->
+          <div style="width: 100%; padding-top: 100%; position: relative; overflow: hidden; border-radius: 10px;">
+            <img
+  src="{{ product.product_img.url }}"
+  alt="{{ product.product_name }}"
+  class="product-image"
+  id="product-image-{{ product.id }}"
+  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover;"
+>
+
+          </div>
+
+          <!-- Name and Price on same line -->
+          <div class="product-info mt-2">
+            <div class="product-name">{{ product.product_name }}</div>
+            <div class="product-price text-success">₹{{ product.product_price }}</div>
+          </div>
+
+          <!-- -Description -->
+          <div class="product-description">
+            {{ product.product_des }}  {# Make sure this is the correct field name #}
+          </div>
+            <!-- Add this inside each product card div, below the description -->
+
+<form method="POST" action="{% url 'dashboard' %}">
+  {% csrf_token %}
+  <input type="hidden" name="product_id" value="{{ product.id }}">
+  {% if request.GET.category %}
+    <input type="hidden" name="category" value="{{ request.GET.category }}">
+  {% endif %}
+<button type="submit"
+        class="btn btn-sm btn-dark w-100 mt-2 add-to-cart-btn"
+        data-product-id="{{ product.id }}">
+  Add to Cart
+</button>
+
+</form>
+
+
+
+        </div>
+      </div>
+      {% endfor %}
+
+    </div>
+
+    <!-- User Info & Logout -->
+    <div class="mt-4">
+      <p>Hello user {{ request.session.user }}</p>
+      <a href="/logout/">
+        <button type="button" class="btn btn-primary w-100">Logout</button>
+      </a>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+<script>
+    // Save scroll position before page unload
+    window.addEventListener("beforeunload", function () {
+        localStorage.setItem("scrollY", window.scrollY);
+    });
+
+    // Restore scroll position on page load
+    window.addEventListener("load", function () {
+        const scrollY = localStorage.getItem("scrollY");
+        if (scrollY !== null) {
+            window.scrollTo(0, parseInt(scrollY));
+        }
+    });
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const cartIcon = document.getElementById('cart-icon');
+
+  document.querySelectorAll('.add-to-cart-btn').forEach(button => {
+    button.addEventListener('click', function (e) {
+      // Prevent default to see the animation (optional, remove if form should submit)
+      e.preventDefault();
+
+      const productId = this.getAttribute('data-product-id');
+      const image = document.getElementById('product-image-' + productId);
+      const imageRect = image.getBoundingClientRect();
+      const cartRect = cartIcon.getBoundingClientRect();
+
+      const flyingImage = image.cloneNode(true);
+      flyingImage.style.position = 'fixed';
+      flyingImage.style.left = imageRect.left + 'px';
+      flyingImage.style.top = imageRect.top + 'px';
+      flyingImage.style.width = imageRect.width + 'px';
+      flyingImage.style.height = imageRect.height + 'px';
+      flyingImage.style.transition = 'all 0.8s ease-in-out';
+      flyingImage.style.zIndex = 9999;
+      flyingImage.style.pointerEvents = 'none';
+
+      document.body.appendChild(flyingImage);
+
+      requestAnimationFrame(() => {
+        flyingImage.style.left = cartRect.left + 'px';
+        flyingImage.style.top = cartRect.top + 'px';
+        flyingImage.style.width = '30px';
+        flyingImage.style.height = '30px';
+        flyingImage.style.opacity = '0.5';
+      });
+
+      flyingImage.addEventListener('transitionend', () => {
+        flyingImage.remove();
+
+        // Now submit the form manually
+        this.closest('form').submit();
+      });
+    });
+  });
+});
+</script>
+
+
+{% endblock %}
+

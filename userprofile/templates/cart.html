@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  .cart-wrapper {
+    max-width: 750px; /* You can tweak this value */
+    margin: 0 auto;
+  }
+</style>
+
+<div class="container cart-wrapper mt-4">
+  <h2>Your Cart 🛒</h2>
+  <a href="/dashboard/">Back to shopping</a>
+
+  {% if cart_items %}
+    <div class="row mt-3">
+      {% for item in cart_items %}
+      <div class="col-12 mb-3 p-3 bg-light rounded shadow-sm d-flex justify-content-between align-items-center">
+
+        <!-- Product -->
+        <div class="d-flex align-items-center">
+          <img src="{{ item.product.product_img.url }}" alt="{{ item.product.product_name }}"
+               style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;">
+          <div class="ms-3">
+            <h5>{{ item.product.product_name }}</h5>
+            <p class="text-muted">₹{{ item.product.product_price }}</p>
+          </div>
+        </div>
+
+        <!-- Quantity Controls -->
+        <form method="POST" action="{% url 'update_cart_quantity' %}" class="d-flex align-items-center">
+          {% csrf_token %}
+          <input type="hidden" name="product_id" value="{{ item.product.id }}">
+          <button type="submit" name="action" value="decrease" class="btn btn-outline-secondary btn-sm">−</button>
+          <span class="mx-2">{{ item.quantity }}</span>
+          <button type="submit" name="action" value="increase" class="btn btn-outline-secondary btn-sm">+</button>
+        </form>
+
+        <!-- Total & Remove -->
+        <div class="text-end">
+          <p>Total: ₹{{ item.total }}</p>
+          <form method="POST" action="{% url 'remove_from_cart' %}">
+            {% csrf_token %}
+            <input type="hidden" name="product_id" value="{{ item.product.id }}">
+            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+          </form>
+        </div>
+
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="bg-white p-3 mt-4 rounded shadow-sm">
+      <h4 class="mb-3">Grand Total: ₹{{ total_price }}</h4>
+      <a href="{% url 'checkout' %}" class="btn btn-success w-100">Proceed to Checkout</a>
+    </div>
+
+  {% else %}
+    <div class="bg-white p-3 mt-4 rounded shadow-sm">
+      <a href="{% url 'dashboard' %}" class="btn btn-secondary w-100 disabled">Cart is Empty</a>
+    </div>
+  {% endif %}
+</div>
+
+{% endblock %}

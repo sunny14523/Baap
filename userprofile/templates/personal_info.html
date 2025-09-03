@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<style>
+  .info-wrapper {
+    max-width: 750px;
+    margin: 0 auto;
+  }
+</style>
+
+<div class="container info-wrapper mt-4">
+
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Personal Information</h2>
+    <a href="/profile/" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left"></i> Back to Profile
+    </a>
+  </div>
+
+  <!-- Info Card -->
+  <div class="bg-light p-4 rounded shadow-sm">
+    <div class="mb-3">
+      <label class="form-label fw-bold">Full Name:</label>
+      <div>{{ customer.name }}</div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label fw-bold">Email:</label>
+      <div>{{ customer.email }}</div>
+    </div>
+    <div class="mb-3">
+      <label class="form-label fw-bold">Phone Number:</label>
+      <div>{{ customer.phone }}</div>
+    </div>
+
+    <!-- Edit Button -->
+    <div class="mt-4">
+      <a href="/edit-info/" class="btn btn-primary">
+        <i class="bi bi-pencil-square"></i> Edit Information
+      </a>
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}
