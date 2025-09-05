@@ -2,7 +2,6 @@ from calendar import error
 
 from django.shortcuts import render,redirect,get_object_or_404
 
-from tkinter.font import names
 import razorpay
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
@@ -477,4 +476,5 @@ def logout(request):
 
 
     return redirect('login')
+
 
