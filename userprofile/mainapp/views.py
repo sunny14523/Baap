@@ -305,7 +305,11 @@ from django.shortcuts import render
 
 
 def profile_view(request):
-    return render(request, 'profile.html')
+    customer_id = request.session.get('user')
+    if not customer_id:
+        return redirect('login')  # or your auth flow
+    customer = Customer.objects.get(id=customer_id)
+    return render(request, 'profile.html',{'customer': customer})
 
 
 
@@ -471,5 +475,6 @@ def security(request):
 
 def logout(request):
     request.session.flush()
+
 
     return redirect('login')
