@@ -9,8 +9,13 @@
 </style>
 
 <div class="container cart-wrapper mt-4">
-  <h2>Your Cart 🛒</h2>
-  <a href="/dashboard/">Back to shopping</a>
+    <!-- Heading and Back Button -->
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Your Cart 🛒</h2>
+    <a href="/dashboard/" class="btn btn-outline-secondary btn-sm">
+      <i class="bi bi-arrow-left"></i> Back to Shopping
+    </a>
+  </div>
 
   {% if cart_items %}
     <div class="row mt-3">
@@ -63,3 +68,4 @@
 </div>
 
 {% endblock %}
+
