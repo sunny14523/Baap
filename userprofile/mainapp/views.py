@@ -1,5 +1,4 @@
 from calendar import error
-from idlelib.query import Query
 
 from django.shortcuts import render,redirect,get_object_or_404
 
@@ -478,3 +477,4 @@ def logout(request):
 
 
     return redirect('login')
+
